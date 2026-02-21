@@ -1,557 +1,397 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZenCore Solutions - Code Sharing Platform</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZenCore · login</title>
+  <!-- Font Awesome 6 (free) for brand icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
 
-        :root {
-            --primary-color: #6366f1;
-            --secondary-color: #4f46e5;
-            --dark-color: #1e293b;
-            --light-color: #f8fafc;
-            --gray-color: #64748b;
-            --success-color: #22c55e;
-            --danger-color: #ef4444;
-            --warning-color: #f59e0b;
-        }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0b0f17;  /* fallback deep navy */
+      position: relative;
+      padding: 1rem;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: var(--dark-color);
-        }
+    /* PROFESSIONAL BLUR BACKGROUND — barall style (dark, moody, glass) */
+    .blur-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(45, 95, 255, 0.18) 0%, transparent 35%),
+        radial-gradient(circle at 90% 70%, rgba(255, 70, 150, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 30% 80%, rgba(120, 220, 255, 0.12) 0%, transparent 45%),
+        #0a0e1a;
+      background-blend-mode: overlay;
+      filter: blur(8px) brightness(0.9);
+      transform: scale(1.1);
+      z-index: 0;
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+    /* main card — glassmorphism, crisp */
+    .login-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 460px;
+    }
 
-        /* Header Styles */
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
+    .glass-card {
+      background: rgba(18, 22, 36, 0.75);
+      backdrop-filter: blur(15px) saturate(180%);
+      -webkit-backdrop-filter: blur(15px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 2.5rem;
+      padding: 2.8rem 2.2rem 2.4rem 2.2rem;
+      box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(120, 180, 255, 0.15) inset;
+      transition: transform 0.2s ease;
+    }
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-        }
+    .glass-card:hover {
+      transform: scale(1.002);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-decoration: none;
-        }
+    /* header + made by */
+    .brand-meta {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 2rem;
+    }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
+    .brand-meta h2 {
+      font-size: 2.2rem;
+      font-weight: 500;
+      letter-spacing: -0.5px;
+      background: linear-gradient(130deg, #ffffff 0%, #c0d0ff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.2rem;
+      line-height: 1.2;
+    }
 
-        .nav-links a {
-            text-decoration: none;
-            color: var(--dark-color);
-            font-weight: 500;
-            transition: color 0.3s;
-        }
+    .brand-meta .made-by {
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: #98a9c9;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+      padding-bottom: 0.75rem;
+    }
 
-        .nav-links a:hover {
-            color: var(--primary-color);
-        }
+    .brand-meta .made-by i {
+      color: #5f8aff;
+      font-size: 0.7rem;
+    }
 
-        .nav-links a.active {
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--primary-color);
-        }
+    /* form */
+    .input-group {
+      margin-bottom: 1.2rem;
+    }
 
-        /* Main Content */
-        main {
-            margin-top: 80px;
-            padding: 2rem 0;
-        }
+    .input-group label {
+      display: block;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 500;
+      color: #a2b7e0;
+      margin-bottom: 0.4rem;
+      margin-left: 0.5rem;
+    }
 
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: 4rem 0;
-            color: white;
-        }
+    .input-field {
+      width: 100%;
+      background: rgba(10, 16, 30, 0.6);
+      border: 1.5px solid rgba(255, 255, 255, 0.06);
+      border-radius: 2rem;
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
+      color: white;
+      outline: none;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
 
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
+    .input-field:focus {
+      border-color: #3f6eff;
+      background: rgba(20, 30, 50, 0.8);
+      box-shadow: 0 0 0 3px rgba(70, 130, 255, 0.25);
+    }
 
-        .hero p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            margin-bottom: 2rem;
-        }
+    .input-field::placeholder {
+      color: #5b6e92;
+      font-weight: 300;
+      font-size: 0.95rem;
+    }
 
-        .search-box {
-            max-width: 600px;
-            margin: 0 auto;
-            display: flex;
-            gap: 1rem;
-        }
+    /* extras (remember / forgot) */
+    .row-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.2rem 0 1.5rem 0;
+      font-size: 0.9rem;
+    }
 
-        .search-box input {
-            flex: 1;
-            padding: 1rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: #b1c3e0;
+    }
 
-        .search-box button {
-            padding: 1rem 2rem;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
+    .checkbox input {
+      accent-color: #3f6eff;
+      width: 1rem;
+      height: 1rem;
+    }
 
-        .search-box button:hover {
-            background: var(--secondary-color);
-        }
+    .forgot-link {
+      color: #95adff;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(150, 180, 255, 0.4);
+    }
 
-        /* Categories */
-        .categories {
-            padding: 3rem 0;
-        }
+    .forgot-link:hover {
+      color: white;
+      border-bottom-color: white;
+    }
 
-        .categories h2 {
-            text-align: center;
-            color: white;
-            margin-bottom: 2rem;
-            font-size: 2rem;
-        }
+    /* LOGIN BUTTON — pro */
+    .login-btn {
+      width: 100%;
+      background: linear-gradient(145deg, #1f3a8a, #1638b0);
+      border: none;
+      padding: 1rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: white;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 12px 25px -8px #0f1f4e, 0 2px 0 0 #62a5ff inset;
+      margin-bottom: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
 
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
+    .login-btn i {
+      font-size: 1rem;
+      color: #c4dcff;
+    }
 
-        .category-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-        }
+    .login-btn:hover {
+      background: linear-gradient(145deg, #2445a5, #1e41cc);
+      box-shadow: 0 18px 30px -6px #102055, 0 2px 0 0 #80bdff inset;
+      transform: translateY(-2px);
+    }
 
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
+    .login-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 8px 18px -6px #0e1b4a;
+    }
 
-        .category-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
+    /* register bar (call to action) */
+    .register-bar {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 3rem;
+      padding: 0.9rem 1.2rem;
+      margin-bottom: 2.2rem;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(8px);
+      font-size: 0.95rem;
+      color: #cddafc;
+    }
 
-        .category-card h3 {
-            margin-bottom: 0.5rem;
-            color: var(--dark-color);
-        }
+    .register-bar strong {
+      font-weight: 600;
+      color: white;
+    }
 
-        .category-card p {
-            color: var(--gray-color);
-        }
+    .register-bar a {
+      color: #7fa9ff;
+      text-decoration: none;
+      font-weight: 600;
+      margin-left: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.3rem 1rem;
+      border-radius: 3rem;
+      background: rgba(20, 40, 80, 0.4);
+      transition: 0.2s;
+      white-space: nowrap;
+    }
 
-        /* Latest Codes */
-        .latest-codes {
-            padding: 3rem 0;
-        }
+    .register-bar a:hover {
+      background: #2e4a9e;
+      color: white;
+      border-color: #4f8aff;
+    }
 
-        .latest-codes h2 {
-            text-align: center;
-            color: white;
-            margin-bottom: 2rem;
-            font-size: 2rem;
-        }
+    /* social section */
+    .social-label {
+      text-align: center;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #8fa3cf;
+      margin-bottom: 1.2rem;
+      position: relative;
+    }
 
-        .code-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
+    .social-label span {
+      background: rgba(18, 22, 36, 0.5);
+      padding: 0 0.8rem;
+      backdrop-filter: blur(4px);
+    }
 
-        .code-card {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1.8rem;
+    }
 
-        .code-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
+    .social-btn {
+      background: rgba(20, 30, 48, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      width: 3.8rem;
+      height: 3.8rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: #f0f4ff;
+      transition: all 0.2s;
+      backdrop-filter: blur(6px);
+      text-decoration: none;
+      box-shadow: 0 8px 14px -6px #010314;
+    }
 
-        .code-image {
-            height: 200px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            position: relative;
-        }
+    .social-btn.google:hover {
+      background: #dd4b39;
+      color: white;
+      border-color: white;
+      transform: translateY(-4px) scale(1.05);
+    }
 
-        .code-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+    .social-btn.facebook:hover {
+      background: #1877f2;
+      color: white;
+      transform: translateY(-4px) scale(1.05);
+    }
 
-        .code-content {
-            padding: 1.5rem;
-        }
+    .social-btn.instagram:hover {
+      background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 80%);
+      color: white;
+      transform: translateY(-4px) scale(1.05);
+    }
 
-        .code-title {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-            color: var(--dark-color);
-        }
+    /* ZenCore signature */
+    .signature-foot {
+      text-align: center;
+      margin-top: 2.2rem;
+      font-size: 0.8rem;
+      color: #4a608f;
+      letter-spacing: 1px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      padding-top: 1.4rem;
+    }
 
-        .code-meta {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-            color: var(--gray-color);
-            font-size: 0.9rem;
-        }
+    .signature-foot i {
+      color: #5e80cc;
+      font-size: 0.6rem;
+      margin: 0 4px;
+    }
 
-        .code-tags {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin-bottom: 1rem;
-        }
-
-        .tag {
-            background: var(--light-color);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: var(--gray-color);
-        }
-
-        .view-code {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-
-        .view-code:hover {
-            background: var(--secondary-color);
-        }
-
-        /* Footer */
-        footer {
-            background: var(--dark-color);
-            color: white;
-            padding: 3rem 0;
-            margin-top: 3rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .footer-section h3 {
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-
-        .footer-section p {
-            color: #94a3b8;
-            line-height: 1.6;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-section ul li a {
-            color: #94a3b8;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-section ul li a:hover {
-            color: white;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .social-links a {
-            color: white;
-            font-size: 1.5rem;
-            transition: color 0.3s;
-        }
-
-        .social-links a:hover {
-            color: var(--primary-color);
-        }
-
-        .copyright {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid #334155;
-            color: #94a3b8;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .search-box {
-                flex-direction: column;
-            }
-            
-            .search-box button {
-                width: 100%;
-            }
-        }
-
-        /* Loading Animation */
-        .loader {
-            border: 4px solid var(--light-color);
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 2rem auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+    hr {
+      border: 0.5px solid rgba(255,255,255,0.03);
+      margin: 1rem 0;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <nav>
-                <a href="index.html" class="logo" id="siteLogo">ZenCore Solutions</a>
-                <div class="nav-links">
-                    <a href="index.html" class="active">Home</a>
-                    <a href="codes.html">Codes</a>
-                    <a href="#about">About</a>
-                    <a href="#contact">Contact</a>
-                    <a href="admin-login.html">Admin</a>
-                </div>
-            </nav>
+  <!-- full background blur layer (barall style) -->
+  <div class="blur-bg" aria-hidden="true"></div>
+
+  <div class="login-container">
+    <div class="glass-card">
+
+      <!-- header with "made by ZenCore Solutions" (exactly as required) -->
+      <div class="brand-meta">
+        <h2>access ⚡</h2>
+        <div class="made-by">
+          <i class="fa-regular fa-copyright"></i> 
+          <span>made by <strong>ZenCore Solutions</strong></span>
+          <i class="fa-regular fa-heart" style="color: #7b9cff; margin-left: auto;"></i>
         </div>
-    </header>
+      </div>
 
-    <main>
-        <section class="hero">
-            <div class="container">
-                <h1>Share Your Code, Empower Others</h1>
-                <p>Join our community of developers and share your code snippets, tutorials, and projects</p>
-                <div class="search-box">
-                    <input type="text" placeholder="Search for code snippets, tutorials, or projects..." id="searchInput">
-                    <button onclick="searchCodes()">Search</button>
-                </div>
-            </div>
-        </section>
+      <!-- email / password form -->
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" class="input-field" placeholder="work@zencore.dev" value="demo@zencore.dev">
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" class="input-field" placeholder="••••••••" value="zencore2025">
+      </div>
 
-        <section class="categories">
-            <div class="container">
-                <h2>Popular Categories</h2>
-                <div class="category-grid" id="categoryGrid">
-                    <div class="category-card" onclick="filterByCategory('html')">
-                        <div class="category-icon">🌐</div>
-                        <h3>HTML/CSS</h3>
-                        <p>Web development basics</p>
-                    </div>
-                    <div class="category-card" onclick="filterByCategory('javascript')">
-                        <div class="category-icon">⚡</div>
-                        <h3>JavaScript</h3>
-                        <p>Interactive web features</p>
-                    </div>
-                    <div class="category-card" onclick="filterByCategory('python')">
-                        <div class="category-icon">🐍</div>
-                        <h3>Python</h3>
-                        <p>Backend & automation</p>
-                    </div>
-                    <div class="category-card" onclick="filterByCategory('react')">
-                        <div class="category-icon">⚛️</div>
-                        <h3>React</h3>
-                        <p>Modern UI development</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+      <div class="row-flex">
+        <label class="checkbox">
+          <input type="checkbox" checked> <span>keep session</span>
+        </label>
+        <a href="#" class="forgot-link">recover?</a>
+      </div>
 
-        <section class="latest-codes">
-            <div class="container">
-                <h2>Latest Codes</h2>
-                <div class="code-grid" id="codeGrid">
-                    <!-- Codes will be loaded dynamically from localStorage -->
-                </div>
-            </div>
-        </section>
-    </main>
+      <!-- LOGIN BUTTON (PRO) -->
+      <button class="login-btn">
+        <i class="fa-regular fa-circle-check"></i> LOGIN
+      </button>
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>About ZenCore Solutions</h3>
-                    <p>We provide a platform for developers to share and discover code snippets, tutorials, and projects. Join our community today!</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="codes.html">Codes</a></li>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <li><a href="admin-login.html">Admin Login</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Contact Info</h3>
-                    <ul>
-                        <li>Email: info@zencore.com</li>
-                        <li>Phone: +1 234 567 890</li>
-                        <li>Address: 123 Tech Street, Digital City</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2024 ZenCore Solutions. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+      <!-- REGISTER BAR (exactly "register Botton" area) -->
+      <div class="register-bar">
+        <strong>🆕 new here?</strong> <a href="#"><i class="fa-regular fa-id-card"></i> register button</a>
+        <span style="opacity:0.4; margin:0 0.3rem;">|</span> 
+        <i class="fa-regular fa-user" style="color:#6a85c0;"></i>
+      </div>
 
-    <script>
-        // Load site name from localStorage
-        function loadSiteName() {
-            const savedName = localStorage.getItem('siteName');
-            if (savedName) {
-                document.getElementById('siteLogo').textContent = savedName;
-            }
-        }
+      <!-- social login: Google, Facebook, Instagram (exactly as specified) -->
+      <div class="social-label">
+        <span>join with network</span>
+      </div>
+      <div class="social-icons">
+        <a href="#" class="social-btn google" aria-label="Login with Google"><i class="fab fa-google"></i></a>
+        <a href="#" class="social-btn facebook" aria-label="Login with Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-btn instagram" aria-label="Login with Instagram"><i class="fab fa-instagram"></i></a>
+      </div>
 
-        // Load codes from localStorage
-        function loadCodes() {
-            const codes = JSON.parse(localStorage.getItem('codes')) || [];
-            const codeGrid = document.getElementById('codeGrid');
-            
-            if (codes.length === 0) {
-                codeGrid.innerHTML = '<p style="text-align: center; color: white; grid-column: 1/-1;">No codes available yet.</p>';
-                return;
-            }
+      <!-- subtle extra: ZenCore tagline (still "made by" is already above, but we repeat in footer to reinforce) -->
+      <div class="signature-foot">
+        <i class="fa-regular fa-cube"></i> engineered by ZenCore Solutions <i class="fa-regular fa-cube"></i>
+      </div>
 
-            // Show only latest 6 codes
-            const latestCodes = codes.slice(-6).reverse();
-            
-            codeGrid.innerHTML = latestCodes.map(code => `
-                <div class="code-card">
-                    <div class="code-image">
-                        ${code.photo ? `<img src="${code.photo}" alt="${code.title}">` : ''}
-                    </div>
-                    <div class="code-content">
-                        <h3 class="code-title">${code.title}</h3>
-                        <div class="code-meta">
-                            <span>By ${code.madeBy || 'Anonymous'}</span>
-                            <span>${new Date(code.date).toLocaleDateString()}</span>
-                        </div>
-                        <div class="code-tags">
-                            <span class="tag">${code.category || 'General'}</span>
-                        </div>
-                        <a href="codes.html?id=${code.id}" class="view-code">View Code</a>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Search function
-        function searchCodes() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            if (searchTerm) {
-                window.location.href = `codes.html?search=${encodeURIComponent(searchTerm)}`;
-            }
-        }
-
-        // Filter by category
-        function filterByCategory(category) {
-            window.location.href = `codes.html?category=${category}`;
-        }
-
-        // Track page view
-        function trackView() {
-            const views = JSON.parse(localStorage.getItem('pageViews')) || [];
-            views.push({
-                page: 'index',
-                timestamp: new Date().toISOString(),
-                userAgent: navigator.userAgent
-            });
-            localStorage.setItem('pageViews', JSON.stringify(views));
-        }
-
-        // Initialize
-        loadSiteName();
-        loadCodes();
-        trackView();
-
-        // Listen for storage changes
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'siteName') {
-                loadSiteName();
-            }
-            if (e.key === 'codes') {
-                loadCodes();
-            }
-        });
-    </script>
+    </div> <!-- end glass-card -->
+  </div> <!-- end login-container -->
 </body>
 </html>
